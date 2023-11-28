@@ -1,0 +1,1 @@
+deque에 pop함수를 수행할 때에는 리스트에 값이 있는지 확인하지 않으면 런타임 에러, index error: pop from an empty deque가 발생한다.
