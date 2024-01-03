@@ -12,7 +12,7 @@ while start <= end:
     cnt = 0
 
     for i in range(1,n+1):
-        cnt += min(mid//i, n)  
+        cnt += min(mid//i, n)  # 
         
     # print("[cnt]:",cnt)   
     if cnt >= k:
