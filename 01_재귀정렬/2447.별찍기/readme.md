@@ -111,3 +111,51 @@ makeBox(N)
     - 마지막은 (3X3) 사각형 안에 (1X1) 자리 사각형이 가운데 비어있다: (1X1) 사각형 81 개, (1 + 1, 1 + 1), (1 + 3, 1), (1, 1 + 3), ...
 - 상위 사각형에서 지워지는 부분에 대해서 하위 부분은 신경 쓸 필요가 없다.
 
+큰 사각형부터 지워나가려고 했으나 코드가 복잡해져 일정 수준 이상 손대기가 어려웠다: 더 쉬운 방법이 있을 것이다.
+
+```python
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10**7)
+
+N = int(input())
+Flags = [ [ 1 for _ in range(N) ] for _ in range(N) ]
+
+def findZero(flags, n, repeat):
+    if(n == 1):
+        
+        return
+
+    tmp = n//3
+    
+    for k in range(repeat):
+        for l in range(repeat):
+            for i in range((k + 1) * tmp + 1, (k + 2) * tmp+1):
+                for j in range((l + 1) * tmp + 1, (l + 2) * tmp+1):
+                    flags[i][j] = 0
+                    print(i, j, ": done")
+    findZero(flags, tmp, 3 * repeat)
+
+findZero(Flags, N, 1)
+
+for i in range(N):
+    for j in range(N):
+        if(Flags[i][j] == 1):
+            print("*", end = "")
+        else:
+            print(" ", end = "")
+    print("")
+```
+
+## 해결!
+
+별을 만들어내 2 차원 배열에 붙여넣는 방법을 사용한다.재귀로 매우 간단하게 구현할 수 있다!
+
+- 문자열 '*' * 3 의 결과는 '***' 이다: 리스트를 곱한게 아니라 요소 문자를 곱한거다. 
+- `print('\n'.join(append_star(n)))` 에서 join은 리스트에 있는 요소를 하나하나 합쳐 문자열로 바꾸고, '\n'을 사이에 둔다.
+- 이전 단위의 별이 같은 방식으로 형태가 커지기 때문에 이전에 사용한 별을 재귀로 사용할 수 있다: 맨 윗줄은 이전 단위가 3개/중간 줄은 하나 바고 둘로 감싸고/아랫 줄도 단위가 3개 반복되는 형식.
+
+이전 단계의 별 S는 그 단계의 열을 요소로 가지는 리스트로 구성되어 있다.
+- 가장 윗줄은 3배 늘어나고
+- 중간 줄은 (현재 단계)//3 만큼 비도록 하고 이전 단계 S로 감
+- 마지막 줄도 3배 늘어난다.
